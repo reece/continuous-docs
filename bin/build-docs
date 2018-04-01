@@ -28,4 +28,5 @@ if [ "$version" != "dev" ]; then
     git add ./$version/ latest
 fi
 
-git commit -m "regenerated documentation $(date +%F) for $version ($release)"
+git add $version
+git commit -am "regenerated documentation $(date +%F) for $version ($release)"
