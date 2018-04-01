@@ -22,7 +22,10 @@ fi
 
 git rm -rf ./$version/ || true
 sphinx-build -b html master/doc/source/ ./$version
-ln -fns $version latest
 
-#git add ./$version/ latest
-#git commit -m "regenerated documentation $(date +%F) for $version ($release)"
+if [ "$version" != "dev" ]; then
+    ln -fns $version latest
+    git add ./$version/ latest
+fi
+
+git commit -m "regenerated documentation $(date +%F) for $version ($release)"
