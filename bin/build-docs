@@ -6,22 +6,17 @@ git clone -b master . master
 #repo_url=$(git config --get remote.origin.url)
 #git clone $repo_url master/
 
+[ -d .venv ] ||  pyvenv .venv
+source .venv/bin/activate
+pip install -q -U -r master/doc/requirements.txt
+pip install -q -U master/
+
 # get release and version (sphinx nomenclature) from tags via conf.py
 read release version <<<$(python -c "exec(open('master/doc/source/conf.py').read()); print(release, version)")
-
 echo "# building docs for $version ($release)"
 
-if ! [ -d .venv ]; then
-    pyvenv .venv
-    source .venv/bin/activate
-    pip install -U -r master/doc/requirements.txt
-    pip install -U master/
-else
-    source .venv/bin/activate
-fi
-
 git rm -rf ./$version/ || true
-sphinx-build -b html master/doc/source/ ./$version
+sphinx-build -q -b html master/doc/source/ ./$version
 
 if [ "$version" != "dev" ]; then
     ln -fns $version latest
